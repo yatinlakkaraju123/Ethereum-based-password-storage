@@ -7,15 +7,15 @@ const crypto = require('crypto');
 const CryptoJS = require('crypto-js');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const passwords = require("./.password.js")
+//const passwords = require("./.password.js")
 const app = express()
-const Secret = passwords.JWT
+//const Secret = passwords.JWT
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json())
 const generateToken = (user,vaultid) => {
   const expiration = Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour expiration
-  return jwt.sign({ user,VaultID:vaultid}, Secret, { expiresIn: expiration });
+  return jwt.sign({ user,VaultID:vaultid}, 'secret', { expiresIn: expiration });
 };
 var Encrypt1 = (text,secretKey)=>{
   const data = CryptoJS.AES.encrypt(
