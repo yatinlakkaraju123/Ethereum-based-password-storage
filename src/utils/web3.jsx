@@ -4,4 +4,4 @@ import PasswordManager from "../components/PasswordManager.json"
 export const ABI = PasswordManager.abi;
 export const web3 = new Web3(window.ethereum);
 
-export const contractAddress = "0x4C7D9861d53f0505542039231409C657dee5cF99";
+export const contractAddress = "0x545b747be24f068ed794faf361724b7f2a914411";

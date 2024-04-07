@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import Navbar from './NavBar';
 //import jwtDecode from 'jwt-decode';
+import WalletConnect from './WalletConnect';
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom';
-export default function MenuPage(props) {
+export default function MenuPage() {
   useEffect(() => {
     //Runs only on the first render
     const token = localStorage.getItem('jwtToken');
@@ -14,7 +15,7 @@ export default function MenuPage(props) {
       // Check expiration (decodedToken.exp) or other claims
     }
   }, []);
-    const USER = props.USER;
+    
     const logout = async(event)=>{
       event.preventDefault();
       localStorage.removeItem('jwtToken');
@@ -24,7 +25,7 @@ export default function MenuPage(props) {
   return (
     <div>
       <Navbar/>
-        Menu Page
+        <WalletConnect/>
         
     </div>
   )

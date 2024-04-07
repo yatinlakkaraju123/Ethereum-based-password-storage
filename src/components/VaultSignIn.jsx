@@ -4,9 +4,11 @@ import { Link } from "react-router-dom"
 import MenuPage from "./MenuPage"
 import bcrypt from 'bcryptjs'
 import axios from "axios"
-
+import WalletConnect from './WalletConnect';
+import { useNavigate } from "react-router-dom";
 import {ABI,web3,contractAddress} from "../utils/web3"
 export default function VaultSignIn() {
+  let navigate = useNavigate();
   const salt = bcrypt.genSaltSync(10)
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
@@ -20,7 +22,7 @@ export default function VaultSignIn() {
                     if(isCorrectEmail)
                     {
                       const vid = await contract.methods.getVaultID(email,gotPassword).call();
-                      axios.post("http://localhost:3007/checkpassword",{
+                      axios.post("https://ethereum-based-password-storage.onrender.com/checkpassword",{
                         retrievedpassword:gotPassword,formpassword:password,email:email,vaultID:vid
                       }).then(result=>
                         {
@@ -29,7 +31,9 @@ export default function VaultSignIn() {
                           if(result.data.isAuthenticated==true)
                           {const token = result.data.token;
                             localStorage.setItem('jwtToken', token);
-                            setMode(1)
+                           
+                            navigate('/LoginHome')
+                            navigate(0)
                           }
                           else
                           {
@@ -44,16 +48,14 @@ export default function VaultSignIn() {
                     }
                   
   }
+
     return (
+     
       <>
-        
+        <WalletConnect />
         {mode===0 &&  <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img
-              className="mx-auto h-10 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            />
+           
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Sign in to your Vault
             </h2>
@@ -120,7 +122,7 @@ export default function VaultSignIn() {
             </p>
           </div>
         </div>}
-       {mode===1 && <MenuPage USER={email}/>}
+       
       </>
     )
   }

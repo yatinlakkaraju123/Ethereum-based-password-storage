@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import {ABI,web3,contractAddress} from "../utils/web3"
 import { useEffect } from 'react'
 import axios from 'axios'
+import './ViewCredentials.css';
+import WalletConnect from './WalletConnect'
 
 export default function ViewCredentials() {
   const [VID,setVID] = useState(0);
@@ -49,15 +51,15 @@ export default function ViewCredentials() {
     }
     console.log(CredArr)
     const Password = await contract.methods.getMasterPassword(u).call();
-    axios.post("http://localhost:3007/retrievecredentials",{Credarr:CredArr,masterPassword:Password}).then(result=>{
+    axios.post("https://ethereum-based-password-storage.onrender.com/retrievecredentials",{Credarr:CredArr,masterPassword:Password}).then(result=>{
     console.log(result.data.decryptedPasswords)
     setCred(result.data.decryptedPasswords)
     }).catch(err=>console.log(err));
   }
   return (
     <div>
-      <Navbar/>
-      
+      <WalletConnect/>
+      <Navbar />
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <button onClick={submit}
@@ -67,6 +69,30 @@ export default function ViewCredentials() {
                   Load Credentials
                 </button></div>
       </div>
+      <div className="grid grid-rows-3 grid-cols-3 gap-4">
+        {cred != null && cred.map((item, index) => (
+          <div className="max-w-sm p-6 m-10 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
+            <p className="mb-2 text-2xl tracking-tight text-gray-900 dark:text-white">
+              Name: {item['name']}
+            </p>
+            <p className="mb-2 text-2xl tracking-tight text-gray-900 dark:text-white">
+              Username: {item['username']}
+            </p>
+            <p className="mb-2 text-2xl tracking-tight text-gray-900 dark:text-white">
+              Password: {item['password']}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+);
+ 
+}
+/*  return (
+    <div>
+      <Navbar/>
+      
+     
       <div className="grid grid-rows-3 grid-cols-3 gap-4">
     {cred!=null && cred.map((item,index)=>(
         <div class=" max-w-sm p-6 m-10 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -79,5 +105,4 @@ export default function ViewCredentials() {
     </div>
 ))}</div>
      </div>
-  )
-}
+  )*/

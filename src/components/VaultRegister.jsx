@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import axios from "axios"
 import NavBar from "./NavBar"
 import {ABI,web3,contractAddress} from "../utils/web3"
+import WalletConnect from "./WalletConnect"
 import { Link } from "react-router-dom"
 export default function VaultRegister() {
     const salt = bcrypt.genSaltSync(10)
@@ -21,14 +22,23 @@ export default function VaultRegister() {
             
             const hashedPassword = bcrypt.hashSync(password, salt);
             //console.log(hashedPassword);
-            axios.post("http://localhost:3007/password",{
+            axios.post("https://ethereum-based-password-storage.onrender.com/password",{
                 hashedPassword:hashedPassword,email:email})
             .then(async result=>
                 {   const encpass = result.data.encryptedPassword
                     const contract = new web3.eth.Contract(ABI, contractAddress);
                     const accounts = await web3.eth.getAccounts();
+                    const usernames = await contract.methods.getAllVaultUsernames().call();
+                    if(usernames.includes(email))
+                    {
+                        alert("email already exists");
+                    }
+                    else
+                    {
+                       
+                        await contract.methods.createNewUser(email,encpass).send({from:accounts[0]});
+                    }
                     
-                    await contract.methods.createNewUser(email,encpass).send({from:accounts[0]})
                     
 
                 })
@@ -39,14 +49,10 @@ export default function VaultRegister() {
 
     return (
         <>
-            
+            <WalletConnect/>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <img
-                        className="mx-auto h-10 w-auto"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                        alt="Your Company"
-                    />
+                  
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Register
                     </h2>

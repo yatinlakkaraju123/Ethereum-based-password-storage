@@ -6,6 +6,7 @@ import CryptoJS from "crypto-js";
 import {ABI,web3,contractAddress} from "../utils/web3"
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom';
+import WalletConnect from './WalletConnect';
 export default function AddCredentials(props) {
   useEffect(() => {
     //Runs only on the first render
@@ -75,7 +76,7 @@ export default function AddCredentials(props) {
             console.log("secretKey:",username)
             console.log("masterpassword:",MasterPassword)
             
-           axios.post("http://localhost:3007/addcredentials",{credentialPassword:a,secretKey:username,masterpassword:MasterPassword}).then(async (result)=>{
+           axios.post("https://ethereum-based-password-storage.onrender.com/addcredentials",{credentialPassword:a,secretKey:username,masterpassword:MasterPassword}).then(async (result)=>{
               const EncPassword = result.data.encryptedCredentialPassword;
              
               setEncCredentialPass(EncPassword)
@@ -103,6 +104,7 @@ export default function AddCredentials(props) {
     }
   return (
     <div>
+      <WalletConnect/>
        <NavBar/>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
